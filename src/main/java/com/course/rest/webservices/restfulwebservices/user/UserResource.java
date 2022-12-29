@@ -17,44 +17,43 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 public class UserResource {
-	
+
 	@Autowired
-private UserDaoService service;
+	private UserDaoService service;
+
 	// retrieveAllUsers
-	// GET  /users
+	// GET /users
 	@GetMapping("/users")
-	public List<User> retrieveAllUsers(){
+	public List<User> retrieveAllUsers() {
 		return service.findAll();
 	}
-	
-	
+
 	// retrieveUser (int id)
-	// GET  /users/{id}
+	// GET /users/{id}
 	@GetMapping("/users/{id}")
-	public User retrieveUser (@PathVariable int id){
+	public User retrieveUser(@PathVariable int id) {
 		User user = service.findOne(id);
-		if (user == null )
-			throw new UserNotFoundException("id- "+ id);
+		if (user == null)
+			throw new UserNotFoundException("id- " + id);
 		return user;
 	}
-	
-	
+
 	@DeleteMapping("/users/{id}")
 	public void deleteUser(@PathVariable int id) {
 		User user = service.deleteById(id);
-		
-		if (user == null )
-			throw new UserNotFoundException("id- "+ id);
+
+		if (user == null)
+			throw new UserNotFoundException("id- " + id);
 	}
-	
-	
+
 	@PostMapping("/users")
 	public ResponseEntity<Object> createUser(@RequestBody @Valid User user) {
 		User savedUser = service.save(user);
-		
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId()).toUri();
-		
+
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId())
+				.toUri();
+
 		return ResponseEntity.created(location).build();
 	}
-	
+
 }
